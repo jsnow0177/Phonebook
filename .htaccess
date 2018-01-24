@@ -1,0 +1,5 @@
+AddDefaultCharset UTF-8
+
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !(\.[css|js|png|jpg|woff|ttf|woff2]$)
+RewriteRule (.*) index.php [L]

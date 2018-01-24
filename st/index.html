@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Phonebook</title>
+    <link rel="stylesheet" type="text/css" href="/st/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/st/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/st/css/material-kit.css"/>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Добавление</h3>
+            </div>
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="input-add-name" class="control-label">Имя пользователя</label>
+                            <input type="text" id="input-add-name" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-add-phone" class="control-label">Номер телефона</label>
+                            <input type="tel" id="input-add-phone" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-add-address" class="control-label">Адрес</label>
+                            <input type="text" id="input-add-address" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary pull-right" id="add-user-btn">Добавить</button>
+                        </div>
+                        <div class="form-group">
+                            <div id="add-result"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Поиск</h3>
+            </div>
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="input-search-name" class="control-label">Имя пользователя</label>
+                            <input type="text" id="input-search-name" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary pull-right" id="search-btn">Искать</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table table-hover table-strip" id="search-list">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя</th>
+                                <th>Номер</th>
+                                <th>Адрес</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row" id="search-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Изменение</h3>
+            </div>
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="input-upd-id" class="control-label">ID пользователя</label>
+                            <input type="number" id="input-upd-id" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-upd-name" class="control-label">Имя пользователя</label>
+                            <input type="text" id="input-upd-name" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-upd-phone" class="control-label">Номер телефона</label>
+                            <input type="tel" id="input-upd-phone" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-upd-address" class="control-label">Адрес</label>
+                            <input type="text" id="input-upd-address" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary pull-right" id="upd-user-btn">Изменить</button>
+                        </div>
+                        <div class="form-group">
+                            <div id="upd-result"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Список всех</h3>
+            </div>
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="get-list-btn">Получить список</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table table-hover table-striped" id="users-list">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя</th>
+                                <th>Номер</th>
+                                <th>Адрес</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/st/js/jquery.min.js"></script>
+<script type="text/javascript" src="/st/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/st/js/material.min.js"></script>
+<script type="text/javascript" src="/st/js/material-kit.js"></script>
+<script type="text/javascript" src="/st/js/bootstrap.growl.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function addUser(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            $btn.prop('disabled', 'disabled');
+            $.ajax({
+                url: '/api/users/',
+                data: 'name=' + encodeURIComponent($('#input-add-name').val()) + '&phone=' + encodeURIComponent($('#input-add-phone').val()) + '&address=' + encodeURIComponent($('#input-add-address').val()),
+                type: 'POST',
+                cache: false,
+                success: function (response) {
+                    $('#input-add-name').val('');
+                    $('#input-add-phone').val('');
+                    $('#input-add-address').val('');
+
+                    if (response.response !== undefined) {
+                        $('#add-result').html('<span class="text-success">Пользователь успешно добавлен!</span>');
+                    } else if (response.error !== undefined) {
+                        $('#add-result').html('<span class="text-danger"><b>#' + response.error.code + '</b> ' + response.error.message + '</span>');
+                    }
+
+                    $btn.prop('disabled', '');
+                },
+                error: function () {
+                    $.bootstrapGrowl('При добавлении пользователя произошла какая-то ошибка!', {type: 'danger'});
+                    $btn.prop('disabled', '');
+                }
+            });
+        }
+
+        function updateUser(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            $btn.prop('disabled', 'disabled');
+            $.ajax({
+                url: '/api/users/' + $('#input-upd-id').val(),
+                data: 'name=' + encodeURIComponent($('#input-upd-name').val()) + '&phone=' + encodeURIComponent($('#input-upd-phone').val()) + '&address=' + encodeURIComponent($('#input-upd-address').val()),
+                type: 'PUT',
+                cache: false,
+                success: function (response) {
+                    $('#input-upd-name').val('');
+                    $('#input-upd-phone').val('');
+                    $('#input-upd-address').val('');
+
+                    if (response.response !== undefined) {
+                        $('#upd-result').html('<span class="text-success">Пользователь успешно обновлён!</span>');
+                    } else if (response.error !== undefined) {
+                        $('#upd-result').html('<span class="text-danger"><b>#' + response.error.code + '</b> ' + response.error.message + '</span>');
+                    }
+
+                    $btn.prop('disabled', '');
+                },
+                error: function () {
+                    $.bootstrapGrowl('При обновлении пользователя произошла какая-то ошибка!', {type: 'danger'});
+                    $btn.prop('disabled', '');
+                }
+            });
+        }
+
+        function searchUser(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            $btn.prop('disabled', 'disabled');
+            var name = $("#input-search-name").val();
+            if (name !== '') name = encodeURIComponent(name);
+
+            $.ajax({
+                url: '/api/users/search/' + name,
+                data: '',
+                type: 'GET',
+                cache: false,
+                success: function (response) {
+                    $('#search-result').html('');
+                    $('#input-search-name').val('');
+
+                    var $tbody = $($('#search-list').find('tbody')[0]);
+                    $tbody.html('');
+
+                    if (response.response !== undefined) {
+                        if (response.response.items.length === 0) {
+                            $tbody.append('<tr><td></td><td colspan="2" class="text-center">Данных не найдено!</td><td></td></tr>')
+                        } else {
+                            for (var i = 0; i < response.response.items.length; i++) {
+                                var user = response.response.items[i];
+                                $tbody.append('<tr>'
+                                    + '<td>' + user.id + '</td>'
+                                    + '<td>' + user.name + '</td>'
+                                    + '<td>' + user.phone + '</td>'
+                                    + '<td>' + user.address + '</td>'
+                                    + '</tr>');
+                            }
+                        }
+                    } else if (response.error !== undefined) {
+                        $('#search-result').html('<span class="text-danger"><b>#' + response.error.code + '</b> ' + response.error.message + '</span>')
+                    }
+
+                    $btn.prop('disabled', '');
+                },
+                error: function () {
+                    $.bootstrapGrowl('При поиске пользователя произошла какая-то ошибка!', {type: 'danger'});
+                    $btn.prop('disabled', '');
+                }
+            });
+        }
+
+        function getList(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            $btn.prop('disabled', 'disabled');
+            $.ajax({
+                url: '/api/users',
+                data: '',
+                type: 'GET',
+                cache: false,
+                success: function (response) {
+                    if (response.response !== undefined) {
+                        var $tbody = $($('#users-list').find('tbody')[0]);
+                        $tbody.html('');
+                        for (var i = 0; i < response.response.items.length; i++) {
+                            var user = response.response.items[i];
+
+                            $tbody.append('<tr>'
+                                + '<td>' + user.id + '</td>'
+                                + '<td>' + user.name + '</td>'
+                                + '<td>' + user.phone + '</td>'
+                                + '<td>' + user.address + '</td>'
+                                + '</tr>');
+                        }
+                    }
+
+                    $btn.prop('disabled', '');
+                },
+                error: function () {
+                    $.bootstrapGrowl('При получении списка пользователей произошла какая-то ошибка!', {type: 'danger'});
+                    $btn.prop('disabled', '');
+                }
+            });
+        }
+
+        $('#add-user-btn').on('click', addUser);
+        $('#upd-user-btn').on('click', updateUser);
+        $('#search-btn').on('click', searchUser);
+        $('#get-list-btn').on('click', getList).trigger('click');
+    });
+</script>
+</body>
+</html>
