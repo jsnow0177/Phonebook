@@ -4,7 +4,7 @@ namespace Simple\Psr4;
 /**
  * Класс автозагрузчика классов. Поддерживает PSR-4
  *
- * @package Zirael\Psr4
+ * @package Simple\Psr4
  */
 class ClassLoader
 {
